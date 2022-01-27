@@ -15,7 +15,7 @@ public class User {
     private Long id;
 
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String username;
 
     @Column
@@ -24,6 +24,12 @@ public class User {
 
     @Column
     private String email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private UserProfile userProfile;
+
+
 
     public User() {
     }

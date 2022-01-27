@@ -8,9 +8,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     private UserService userService;
+    private static final Logger LOGGER = Logger.getLogger(MyUserDetailsService.class.getName());
 
 
     @Autowired
@@ -18,12 +21,11 @@ public class MyUserDetailsService implements UserDetailsService {
         this.userService = userService;
     }
 
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        LOGGER.info("loadUserByUsername");
         User user = userService.findUserByEmailAddress(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
         return new MyUserDetails(user);
     }
 }
