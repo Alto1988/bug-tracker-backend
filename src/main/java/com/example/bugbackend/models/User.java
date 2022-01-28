@@ -72,4 +72,20 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
+
+    public List<Bug> getBugs() {
+        return bugs;
+    }
+
+    public void setBugs(List<Bug> bugs) {
+        this.bugs = bugs;
+    }
 }
