@@ -1,10 +1,13 @@
 package com.example.bugbackend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "bugs")
@@ -17,7 +20,7 @@ public class Bug {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 10000)
     private String description;
 
     @Column
@@ -26,7 +29,7 @@ public class Bug {
     @Column
     private Date updatedAt;
 
-    @Column
+    @Column(length = 3000)
     private String resolutionSummary;
 
     @Column
@@ -40,6 +43,10 @@ public class Bug {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
+    @ManyToMany
+    Set<User> team;
+
 
 
 
