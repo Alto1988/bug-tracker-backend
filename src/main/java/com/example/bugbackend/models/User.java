@@ -28,9 +28,6 @@ public class User {
     @Column
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfile userProfile;
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -73,13 +70,7 @@ public class User {
         this.email = email;
     }
 
-    public UserProfile getUserProfile() {
-        return userProfile;
-    }
 
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
-    }
 
     public List<Bug> getBugs() {
         return bugs;
