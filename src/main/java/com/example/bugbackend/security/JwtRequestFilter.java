@@ -36,6 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = AuthorizationHeader.substring(7);
             username = jwtUtils.extractUsername(jwt);
         }
+        //Something happens here that is wrong for some reason the username is always null
         LOGGER.info("JWT: " + jwt +  "Username: " + username);
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
