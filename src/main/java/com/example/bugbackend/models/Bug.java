@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -24,10 +25,10 @@ public class Bug {
     private String description;
 
     @Column
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Column
-    private Date updatedAt;
+    private LocalDate updatedAt;
 
     @Column(length = 3000)
     private String resolutionSummary;
@@ -77,21 +78,7 @@ public class Bug {
         this.description = description;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     public String getResolutionSummary() {
         return resolutionSummary;
@@ -131,5 +118,21 @@ public class Bug {
 
     public void setTeam(Set<User> team) {
         this.team = team;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.bugbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -33,6 +34,10 @@ public class User {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Bug> bugs;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     public User() {
     }

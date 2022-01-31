@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -28,22 +30,50 @@ public class BugService {
     public Bug createBug(Bug bug) {
         LOGGER.info("Creating bug from createBug method");
         MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User userOptional = userRepository.findUserByEmail(user.getUsername());
-//        System.out.println(userOptional.get().getId());
-        if(userOptional != null) {
-            Bug returnBug = new Bug();
-            returnBug.setTitle(bug.getTitle());
-            returnBug.setDescription(bug.getDescription());
-            returnBug.setCreatedAt(new Date());
-            returnBug.setUpdatedAt(new Date());
-            returnBug.setPriority(bug.getPriority());
-            returnBug.setStatus(bug.getStatus());
-            returnBug.setUser(userOptional);
-            returnBug.setResolutionSummary(bug.getResolutionSummary());
-            LOGGER.info("Bug created at " + new Date().toString());
-            return bugRepository.save(returnBug);
+
+//        Bug tempBug = bugRepository.findBugByUserId(user.getUser().getId());
+        //This checks if the user already has a bug with that title
+        Bug tempBug = bugRepository.findBugByUserIdAndTitle(user.getUser().getId(), bug.getTitle());
+        if (tempBug != null) {
+            throw new InformationDoesNotExistException("User already has a bug");
         }else {
-            throw new InformationDoesNotExistException("User does not exist");
+            bug.setCreatedAt(LocalDate.from(LocalDateTime.now()));
+            bug.setUser(user.getUser());
+            return bugRepository.save(bug);
         }
     }
+
+    public Bug updateBug(Long id, Bug bug) {
+        MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Bug tempBug = bugRepository.findBugByUserId(user.getUser().getId());
+        if (tempBug == null) {
+            throw new InformationDoesNotExistException("User does not have a bug");
+        }else{
+            tempBug.setTitle(bug.getTitle());
+            tempBug.setDescription(bug.getDescription());
+            tempBug.setStatus(bug.getStatus());
+            tempBug.setPriority(bug.getPriority());
+            tempBug.setUpdatedAt(LocalDate.from(LocalDateTime.now()));
+            tempBug.setResolutionSummary(bug.getResolutionSummary());
+            tempBug.setUser(user.getUser());
+            return bugRepository.save(tempBug);
+        }
+    }
+
+    public void deleteBug(Long id) {
+        MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Bug> bug = bugRepository.findById(id);
+        if (bug.isPresent()) {
+            Bug tempBug = bug.get();
+            if (tempBug.getUser().getId() == user.getUser().getId()) {
+                bugRepository.deleteById(id);
+            }else {
+                throw new InformationDoesNotExistException("User does not have a bug");
+            }
+        }else {
+            throw new InformationDoesNotExistException("User does not have a bug");
+        }
+
+    }
+
 }
