@@ -17,6 +17,11 @@ public class BugController {
         this.bugService = bugService;
     }
 
+    //Get Mapping
+    @GetMapping("/bug/{id}")
+    public Bug getBug(@PathVariable Long id) {
+        return bugService.getBug(id);
+    }
 
     //POST Mappings
     @PostMapping("/bug")
