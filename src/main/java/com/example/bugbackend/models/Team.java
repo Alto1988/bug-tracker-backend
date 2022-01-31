@@ -15,6 +15,9 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String teamName;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<User> teamMembers;
@@ -36,5 +39,13 @@ public class Team {
 
     public void setTeamMembers(List<User> teamMembers) {
         this.teamMembers = teamMembers;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 }

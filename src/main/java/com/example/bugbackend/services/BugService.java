@@ -76,4 +76,18 @@ public class BugService {
 
     }
 
+    public Bug getBug(Long id) {
+        MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Bug> bug = bugRepository.findById(id);
+        if (bug.isPresent()) {
+            Bug tempBug = bug.get();
+            if (tempBug.getUser().getId() == user.getUser().getId()) {
+                return tempBug;
+            }else {
+                throw new InformationDoesNotExistException("User does not have a bug");
+            }
+        }else {
+            throw new InformationDoesNotExistException("User does not have a bug");
+        }
+    }
 }
