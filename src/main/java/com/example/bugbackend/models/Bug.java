@@ -39,6 +39,9 @@ public class Bug {
     @Column
     private String status;
 
+    @Column
+    private String type;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -134,5 +137,13 @@ public class Bug {
 
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

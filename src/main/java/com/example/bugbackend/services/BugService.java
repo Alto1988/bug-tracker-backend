@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -45,18 +46,24 @@ public class BugService {
 
     public Bug updateBug(Long id, Bug bug) {
         MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Bug tempBug = bugRepository.findBugByUserId(user.getUser().getId());
-        if (tempBug == null) {
+
+        Optional<Bug> bugOptional = bugRepository.findById(id);
+        if (bugOptional.isPresent()) {
+            Bug tempBug = bugOptional.get();
+            if (tempBug.getUser().getId() == user.getUser().getId()) {
+                tempBug.setTitle(bug.getTitle());
+                tempBug.setDescription(bug.getDescription());
+                tempBug.setStatus(bug.getStatus());
+                tempBug.setPriority(bug.getPriority());
+                tempBug.setUpdatedAt(LocalDate.from(LocalDateTime.now()));
+                tempBug.setResolutionSummary(bug.getResolutionSummary());
+                tempBug.setUser(user.getUser());
+                return bugRepository.save(tempBug);
+            }else {
+                throw new InformationDoesNotExistException("User does not have a bug");
+            }
+        }else {
             throw new InformationDoesNotExistException("User does not have a bug");
-        }else{
-            tempBug.setTitle(bug.getTitle());
-            tempBug.setDescription(bug.getDescription());
-            tempBug.setStatus(bug.getStatus());
-            tempBug.setPriority(bug.getPriority());
-            tempBug.setUpdatedAt(LocalDate.from(LocalDateTime.now()));
-            tempBug.setResolutionSummary(bug.getResolutionSummary());
-            tempBug.setUser(user.getUser());
-            return bugRepository.save(tempBug);
         }
     }
 
@@ -86,6 +93,16 @@ public class BugService {
             }else {
                 throw new InformationDoesNotExistException("User does not have a bug");
             }
+        }else {
+            throw new InformationDoesNotExistException("User does not have a bug");
+        }
+    }
+
+    public List<Bug> getBugs() {
+        MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User checkUser = userRepository.findUserByIdAndEmail(user.getUser().getId(), user.getUser().getEmail());
+        if (checkUser != null) {
+            return bugRepository.findAllByUserId(user.getUser().getId());
         }else {
             throw new InformationDoesNotExistException("User does not have a bug");
         }

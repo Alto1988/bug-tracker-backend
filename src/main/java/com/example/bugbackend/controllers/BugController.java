@@ -6,6 +6,8 @@ import com.example.bugbackend.services.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class BugController {
@@ -21,6 +23,11 @@ public class BugController {
     @GetMapping("/bug/{id}")
     public Bug getBug(@PathVariable Long id) {
         return bugService.getBug(id);
+    }
+
+    @GetMapping("/bug")
+    public List<Bug> getBugs() {
+        return bugService.getBugs();
     }
 
     //POST Mappings
